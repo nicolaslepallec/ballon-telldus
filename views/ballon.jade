@@ -1,0 +1,51 @@
+extends layout
+
+block header
+    link(rel='stylesheet', type='text/css', href='stylesheets/mystyle.css')
+    script.
+      function updateDeviceState(){
+      var APIPath = "/devicestate";
+      var request = new XMLHttpRequest();
+      request.open('GET', APIPath, true);
+      request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+      // Success!
+      var data = JSON.parse(request.responseText);
+      console.log(data.state);
+      setTimeout(updateDeviceState , 2000);
+      var circle=document.getElementById("svgcircle");
+      console.log(circle);
+      switch (data.state){
+      case 1:
+      circle.style.fill="green";
+      break;
+      default:
+      circle.style.fill="red";
+      break;
+      }
+      } else {
+      // We reached our target server, but it returned an error
+      }
+      };
+      request.onerror = function() {
+      // There was a connection error of some sort
+      };
+      request.send();
+      }
+      function start(){
+      updateDeviceState();
+      }
+
+block body
+  body(onload='start()')
+    #container
+      div
+        img(src='http://s2.lmcdn.fr/multimedia/ce4247107/10baf5124ee78/produits/chauffe-eau-electrique-vertical-sur-socle-welcome-300-l.jpg', style='width:100vw;')
+      #state
+        | Ballon switch state now : 
+        svg#circle(xmlns='http://www.w3.org/2000/svg')
+          circle#svgcircle(cx='5', cy='5', r='5', fill= ballon.state==="1" ? 'on' : 'off')
+      #buttons(align='')
+       a(href='/on-eco#buttons', class= ballon.mode==="on-eco" ? 'on' : 'off') ON ECO
+       a(href='/force-on#buttons', class= ballon.mode==="force-on" ? 'on' : 'off') FORCE ON
+       a(href='/off#buttons', class= ballon.mode==="off" ? 'on' : 'off') OFF
