@@ -1,5 +1,7 @@
 node_modules/
 telldus/telldusConfig.js
+telldus/ballonConfig.js
+*.log
 fb.js
 .DS_Store
 

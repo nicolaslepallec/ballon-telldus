@@ -1,5 +1,6 @@
 var Telldus = require('../telldus/Telldus');
 var ballonMg = require('../models/ballon');
+var config = require('../telldus/ballonConfig');
 //var JSONPath = require('JSONPath');
 var fs = require('fs');
 var ON_ECO = "on-eco";
@@ -8,7 +9,7 @@ var OFF = "off";
 var ON = "on";
 var ballonRealState = "";
 var state_ballon = OFF;
-var BALLON_TELLDUS_ID = "839364";
+//var BALLON_TELLDUS_ID = "839364";
 
 //ECO HOURS
 var ECO_HOUR_START = 0;
@@ -45,7 +46,7 @@ function setState(mode, callback) {
                 break;
         }
         switchBallon(StateToSwitchBallon, function(data) {
-            Telldus.getDeviceLastState(BALLON_TELLDUS_ID, function(ballonState) {
+            Telldus.getDeviceLastState(config.BALLON_TELLDUS_ID, function(ballonState) {
                 console.log("Device current state is :: " + ballonState);
                 ballon.state = ballonState;
                 callback(ballon);
@@ -74,7 +75,7 @@ function setState(mode, callback) {
 
 function getBallonFromDB(mode, callback) {
     ballonMg.findOne({
-        'id': BALLON_TELLDUS_ID
+        'id': config.BALLON_TELLDUS_ID
     }, function(err, ballon) {
         if (err) callback(err);
 
@@ -88,7 +89,7 @@ function getBallonFromDB(mode, callback) {
         } else {
             // if there is no ballon found with that Telldus id, create it
             var newBallon = new ballonMg();
-            newBallon.id = BALLON_TELLDUS_ID;
+            newBallon.id = config.BALLON_TELLDUS_ID;
             //default to off if undefined
             if (mode == "") mode = OFF;
             newBallon.mode = mode;
@@ -124,7 +125,7 @@ function switchBallon(state, callback) {
         telldusState = Telldus.TURN_ON
 
     }
-    Telldus.switchDeviceState(BALLON_TELLDUS_ID, telldusState, function(data) {
+    Telldus.switchDeviceState(config.BALLON_TELLDUS_ID, telldusState, function(data) {
         console.log(data);
         callback(data);
     });
@@ -132,7 +133,7 @@ function switchBallon(state, callback) {
 }
 
 function getBallonRealState(callback) {
-    Telldus.getDeviceLastState(BALLON_TELLDUS_ID, function(state) {
+    Telldus.getDeviceLastState(config.BALLON_TELLDUS_ID, function(state) {
         callback(state);
     });
 }
