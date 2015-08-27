@@ -67,7 +67,7 @@ function switchDeviceState(deviceID, action, callback){
 function dimDevice(deviceID, dimPercentage, callback){
 	var dimLevel=int(dimPercentage)*255/100;
 
-	get(DIM_CALL+"?id="+deviceID+"level="+, function(data){
+	get(DIM_CALL+"?id="+deviceID+"level="+dimLevel, function(data){
 		console.log(data);
 		callback(data);
 	});
