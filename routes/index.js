@@ -11,7 +11,7 @@ var isAuthenticated = function (req, res, next) {
 	res.redirect('/');
 }
 
-module.exports = function(passport, ballonManager){
+module.exports = function(passport, ballonManager, lightManager){
 
 	/* GET login page. */
 	router.get('/', function(req, res) {
