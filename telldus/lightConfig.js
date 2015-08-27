@@ -1,0 +1,6 @@
+module.exports={
+	'LUSTRE_ENTRE' : '839364',
+	'LUSTRE_TABLE' : '839364',
+	'LUSTRE_SALON' : '839364',
+	'LUSTRE_CUISINE' : '839364'
+}

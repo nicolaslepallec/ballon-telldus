@@ -14,6 +14,7 @@ var TURN_OFF=2;
 var TURN_ON_CALL="/device/turnOn";
 var TURN_OFF_CALL="/device/turnOff";
 var HISTORY_CALL="/device/history";
+var DIM_CALL="/device/dim";
 
 var oauth = new OAuth.OAuth(
   URL+'/oauth/requestToken',
@@ -63,6 +64,16 @@ function switchDeviceState(deviceID, action, callback){
 
 }
 
+function dimDevice(deviceID, dimPercentage, callback){
+	var dimLevel=int(dimPercentage)*255/100;
+
+	get(DIM_CALL+"?id="+deviceID+"level="+, function(data){
+		console.log(data);
+		callback(data);
+	});
+
+}
+
 function getDeviceLastState(deviceID, callback){
 	var timestamp=new Date().getTime()+3600;
 	get(HISTORY_CALL+"?id="+deviceID+"&to="+timestamp, function(data){
@@ -76,6 +87,7 @@ function getDeviceLastState(deviceID, callback){
 exports.get=get;
 exports.switchDeviceState=switchDeviceState;
 exports.getDeviceLastState=getDeviceLastState;
+exports.dimDevice=dimDevice;
 exports.STATE_ON=STATE_ON;
 exports.STATE_OFF=STATE_OFF;
 exports.TURN_ON=TURN_ON;
