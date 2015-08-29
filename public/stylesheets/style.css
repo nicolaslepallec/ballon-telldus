@@ -7,6 +7,15 @@ a {
   color: #00B7FF;
 }
 
+.preset{
+    text-align: center;
+    width: 100%;
+    padding-bottom: 10%;
+    padding-top: 5%;
+    font-size: xx-large;
+}
+}
+
 .form-signin{
     max-width: 330px;
     padding: 15px;

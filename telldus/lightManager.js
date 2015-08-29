@@ -22,6 +22,7 @@ function setPreset(presetID, callback) {
             setLightLevel(light, function(data){
 
                     console.log(data);
+                    callback(data);
             });
         });
         //getLightFromDB()

@@ -1,11 +1,14 @@
 extends layout
 
+block header
+  link(rel='stylesheet', href='/stylesheets/style.css')
+
 block content
-  div
+  div 
     //- - var rgbstart=#db8b00
     //- - var rgbend=#fcf7bd
     each val in presets
-      div
+      .preset
         div
           a(href="/light/" + val.name)
             =val.name
