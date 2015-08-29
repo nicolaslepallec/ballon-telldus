@@ -1,6 +1,5 @@
 module.exports={
-	'LUSTRE_ENTRE' : '839364',
-	'LUSTRE_TABLE' : '839364',
-	'LUSTRE_SALON' : '839364',
-	'LUSTRE_CUISINE' : '839364'
+	'LUSTRE_ENTRE' : {id:'854069', dimmable:'true'},
+	'LUSTRE_TABLE' : {id:'854058', dimmable:'true'},
+	'LUSTRE_SALON' : {id:'854113', dimmable:'true'},
 }

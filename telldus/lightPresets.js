@@ -3,31 +3,37 @@ module.exports={
         "name": "dinner",
         "preset": [{
             "device": "LUSTRE_ENTRE",
-            "level": "30"
+            "level": "70"
         }, {
             "device": "LUSTRE_TABLE",
             "level": "70"
         }, {
             "device": "LUSTRE_SALON",
-            "level": "30"
-        }, {
-            "device": "LUSTRE_CUISINE",
-            "level": "10"
+            "level": "80"
         }]
     }, {
         "name": "TV",
         "preset": [{
             "device": "LUSTRE_ENTRE",
-            "level": "10"
+            "level": "50"
         }, {
             "device": "LUSTRE_TABLE",
-            "level": "10"
+            "level": "60"
         }, {
             "device": "LUSTRE_SALON",
-            "level": "10"
+            "level": "60"
+        }]
+    },{
+        "name": "off",
+        "preset": [{
+            "device": "LUSTRE_ENTRE",
+            "level": "0"
         }, {
-            "device": "LUSTRE_CUISINE",
-            "level": "10"
+            "device": "LUSTRE_TABLE",
+            "level": "0"
+        }, {
+            "device": "LUSTRE_SALON",
+            "level": "0"
         }]
     }]
 }

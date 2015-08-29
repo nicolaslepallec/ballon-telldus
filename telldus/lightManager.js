@@ -1,24 +1,32 @@
 var Telldus = require('../telldus/Telldus');
-var ballonMg = require('../models/ballon');
-var config = require('../telldus/ballonConfig');
-//var JSONPath = require('JSONPath');
+var lightMg = require('../models/light');
+var config = require('../telldus/lightConfig');
+var presets = require('../telldus/lightPresets');
+var JSONPath = require('JSONPath');
 var fs = require('fs');
-var ON_ECO = "on-eco";
-var FORCE_ON = "force-on";
 var OFF = "off";
 var ON = "on";
-var ballonRealState = "";
-var state_ballon = OFF;
-//var BALLON_TELLDUS_ID = "839364";
-
-//ECO HOURS
-var ECO_HOUR_START = 0;
-var ECO_HOUR_FINISH = 8;
 
 
-function setState(mode, callback) {
+function setPreset(presetID, callback) {
+    //JSONPath$..book[?(@.price<10)]
+    var lights=[];
+    var preset=JSONPath.eval(presets,"$.presets[?(@.name=='"+presetID+"')]")[0];
+    console.log(preset);
+    for(i in preset.preset){
+        var deviceName=preset.preset[i].device;
+        var deviceObj=config[deviceName];
+        console.log(deviceObj);
+        getLightFromDB(deviceObj, preset.preset[i].level, function(light) {
+             console.log(light);
+            setLightLevel(light, function(data){
 
-    getBallonFromDB(mode, function(ballon) {
+                    console.log(data);
+            });
+        });
+        //getLightFromDB()
+    }
+    /*getBallonFromDB(mode, function(light) {
         var stateCSSOnEco = 'off';
         var stateCSSForceOn = 'off';
         var stateCSSOff = 'off';
@@ -50,55 +58,48 @@ function setState(mode, callback) {
                 console.log("Device current state is :: " + ballonState);
                 ballon.state = ballonState;
                 callback(ballon);
-                /*var circleColor = "";
-                switch (ballon.state) {
-                    case Telldus.STATE_OFF:
-                        circleColor = "red";
-                        break;
-                    case Telldus.STATE_ON:
-                        circleColor = "green";
-                        break;
-                }
-                var html = String(fs.readFileSync("ballon.html"));
-                html = html.replace("{classOnEco}", stateCSSOnEco);
-                html = html.replace("{classForceOn}", stateCSSForceOn);
-                html = html.replace("{classOff}", stateCSSOff);
-                html = html.replace("{circleColor}", circleColor);
-                callback(html);*/
+    
 
             });
         });
 
-    });
+    });*/
 
 }
 
-function getBallonFromDB(mode, callback) {
-    ballonMg.findOne({
-        'id': config.BALLON_TELLDUS_ID
-    }, function(err, ballon) {
+function getLightFromDB(lightObj, level, callback) {
+    lightMg.findOne({
+        'id': lightObj.id
+    }, function(err, light) {
         if (err) callback(err);
 
         // if the ballon is found
-        if (ballon) {
-            if (mode != "") {
-                ballon.mode = mode;
-                ballon.save();
-            }
-            callback(ballon); // user found, return that user
+        if (light) {
+            console.log(light.id+" is dimmable :: "+light.isDimmable);
+            light.level=level;
+            light.save(function(err) {
+                if (err)
+                    throw err;
+
+                // if successful, return the light
+                callback(light);
+            });
+            //callback(light); // user found, return that user
         } else {
             // if there is no ballon found with that Telldus id, create it
-            var newBallon = new ballonMg();
-            newBallon.id = config.BALLON_TELLDUS_ID;
+            var newLight = new lightMg();
+            newLight.id = lightObj.id;
+            newLight.isDimmable = eval(lightObj.dimmable);
+            newLight.level=level;
+            console.log(lightObj.id+" is dimmable :: "+newLight.isDimmable);
             //default to off if undefined
-            if (mode == "") mode = OFF;
-            newBallon.mode = mode;
-            newBallon.save(function(err) {
+           
+            newLight.save(function(err) {
                 if (err)
                     throw err;
 
                 // if successful, return the new user
-                callback(newBallon);
+                callback(newLight);
             });
         }
 
@@ -106,41 +107,39 @@ function getBallonFromDB(mode, callback) {
 
 }
 
-function isEcoHour() {
-    var date = new Date();
-    var current_hour = date.getHours();
-    console.log("current hour is : " + current_hour);
-    if (current_hour >= ECO_HOUR_START && current_hour < ECO_HOUR_FINISH) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
-function switchBallon(state, callback) {
-    var telldusState = Telldus.TURN_OFF
-    console.log("TURUN IT ON STATE :: "+state);
-    if (state == ON) {
-        //switch ballon ON
-        telldusState = Telldus.TURN_ON
-
-    }
-    Telldus.switchDeviceState(config.BALLON_TELLDUS_ID, telldusState, function(data) {
+function setLightLevel(light, callback) {
+    console.log("light.isDimmable "+light.isDimmable);
+    if(light.isDimmable){
+      Telldus.dimDevice(light.id,light.level, function(data) {
         console.log(data);
         callback(data);
-    });
+     });  
+    } else{
+        var telldusState = Telldus.TURN_OFF
+        console.log("TURUN IT ON STATE :: "+telldusState);
+        if (light.level == ON) {
+            //switch ballon ON
+            telldusState = Telldus.TURN_ON
+
+        }
+        Telldus.switchDeviceState(light.id,telldusState, function(data) {
+            console.log(data);
+            callback(data);
+         });  
+    }
+    
 
 }
 
-function getBallonRealState(callback) {
+function getLightRealState(callback) {
     Telldus.getDeviceLastState(config.BALLON_TELLDUS_ID, function(state) {
         callback(state);
     });
 }
-
-module.exports.setState = setState;
-module.exports.ON_ECO = ON_ECO;
+//setPreset("TV");
+module.exports.setPreset = setPreset;
 module.exports.OFF = OFF;
 module.exports.ON = ON;
-module.exports.FORCE_ON = FORCE_ON;
-module.exports.getBallonRealState=getBallonRealState;
+module.exports.getLightRealState=getLightRealState;
+module.exports.presets=presets;
