@@ -1,9 +1,10 @@
 
 var mongoose = require('mongoose');
 
-module.exports = mongoose.model('Ballon', {
+module.exports = mongoose.model('Light', {
 	id :String,
-	mode: String,
-	state: String
+	state: String,
+	isDimmable: Boolean,
+	level: Number
 
 });

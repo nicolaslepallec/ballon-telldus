@@ -5,10 +5,32 @@ var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
 	// Passport adds this method to request object. A middleware is allowed to add properties to
 	// request and response objects
+	
 	if (req.isAuthenticated())
 		return next();
 	// if the user is not authenticated then redirect him to the login page
 	res.redirect('/');
+}
+
+var isAuthenticatedOrLocal = function (req, res, next) {
+	if (req.isAuthenticated() || isLocallyCalled(req) || isLocalhost(req))
+		return next();
+	// if the user is not authenticated then redirect him to the login page
+	res.redirect('/');
+}
+
+function isLocallyCalled(req){
+	var host = req.get('host');
+	var isLocal = (host.indexOf("192.168") >= 0) ? true : false;
+	console.log("isLocallyCalled :: "+isLocal);
+	return isLocal;
+}
+
+function isLocalhost(req){
+	var host = req.get('host');
+	var isLocal = (host.indexOf("localhost") >= 0) ? true : false;
+	console.log("isLocallyCalled :: "+isLocal);
+	return isLocal;
 }
 
 module.exports = function(passport, ballonManager, lightManager){
@@ -44,7 +66,7 @@ module.exports = function(passport, ballonManager, lightManager){
 	});
 
 	/*get Ballon page*/
-	router.get('/ballon', isAuthenticated, function(req, res) {
+	router.get('/ballon', isAuthenticatedOrLocal, function(req, res) {
 	    ballonManager.setState("", function(ballon) {
 	        res.render('ballon', {
 	            user: req.user,
@@ -55,7 +77,7 @@ module.exports = function(passport, ballonManager, lightManager){
 	});
 
 	/*set Ballon ON ECO page*/
-	router.get('/on-eco', isAuthenticated, function(req, res){
+	router.get('/on-eco', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.ON_ECO, function(ballon) {
 	        res.render('ballon', {
 	            user: req.user,
@@ -68,7 +90,7 @@ module.exports = function(passport, ballonManager, lightManager){
 	});
 
 	/*set Ballon ON ECO page*/
-	router.get('/force-on', isAuthenticated, function(req, res){
+	router.get('/force-on', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.FORCE_ON, function(ballon) {
 	        res.render('ballon', {
 	            user: req.user,
@@ -80,7 +102,7 @@ module.exports = function(passport, ballonManager, lightManager){
 	});
 
 	/*set Ballon OFF page*/
-	router.get('/off', isAuthenticated, function(req, res){
+	router.get('/off', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.OFF, function(ballon) {
 	        res.render('ballon', {
 	            user: req.user,
@@ -92,10 +114,32 @@ module.exports = function(passport, ballonManager, lightManager){
 	});
 
 	/*device state API*/
-	router.get('/devicestate', isAuthenticated, function(req, res){
+	router.get('/devicestate', isAuthenticatedOrLocal, function(req, res){
 		ballonManager.getBallonRealState( function(state){
 			res.send('{ "state": '+state+'}');
 		});
+		
+	});
+
+	router.get('/light', isAuthenticatedOrLocal, function(req, res){
+		console.log('lightManager.presets :: '+lightManager.presets.presets);
+		res.render('light', lightManager.presets);
+		/*lightManager.setPreset(req.path, function(state){
+			res.send('{ "state": '+state+'}');
+		});*/
+		
+	});
+
+	/*light preset API*/
+	router.get('/light/*', isAuthenticatedOrLocal, function(req, res){
+		var preset = req.path.split("/")[2];
+		lightManager.setPreset(preset, function(state){
+			res.render('light', lightManager.presets);
+		});
+		
+		/*lightManager.setPreset(req.path, function(state){
+			res.send('{ "state": '+state+'}');
+		});*/
 		
 	});
 
