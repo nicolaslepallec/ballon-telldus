@@ -4,7 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var jcc = require('jade-cache');
 var dbConfig = require('./db');
 var mongoose = require('mongoose');
 
@@ -19,6 +19,12 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+var options = {};
+ 
+jcc.init(options, app, function() {
+  // all jade are compiled and cached 
+});
 
 app.use(favicon());
 app.use(logger('dev'));

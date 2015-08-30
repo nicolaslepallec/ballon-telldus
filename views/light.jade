@@ -2,20 +2,37 @@ extends layout
 
 block header
   link(rel='stylesheet', href='/stylesheets/style.css')
-
+  script.
+    (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")
+    function setPreset(preset){
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange=function()
+        {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200)
+          {
+          //data received
+          document.getElementById("overlay").style.visibility = "hidden";
+          }
+        }
+      xmlhttp.open("GET","/light/"+preset,true);
+      xmlhttp.send();
+      document.getElementById("overlay").style.visibility = "visible";
+    }
 block content
+  #overlay
   div 
+    .title
+      ="Select a theme preset"
     //- - var rgbstart=#db8b00
     //- - var rgbend=#fcf7bd
     each val in presets
-      .preset
-        div
-          a(href="/light/" + val.name)
+      a(href="#" + val.name onclick="setPreset('" + val.name + "')")
+        .preset
             =val.name
-        //- div
-        //-   svg(width='600', height='160')
-        //-     - var color = val.preset[2].level/100*rgbstart+(1-val.preset[2].level/100)*rgbend
-        //-     rect(x='0', y='0', width='200', height='100', style='fill:=color;stroke-width:1;stroke:rgb(0,0,0)')
-        //-     rect(x='200', y='0',width='200', height='50', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')
-        //-     rect(x='200', y='50',width='200', height='50', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')
-        //-     rect(x='200', y='100',width='200', height='40', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')
+          //- div
+          //-   svg(width='600', height='160')
+          //-     - var color = val.preset[2].level/100*rgbstart+(1-val.preset[2].level/100)*rgbend
+          //-     rect(x='0', y='0', width='200', height='100', style='fill:=color;stroke-width:1;stroke:rgb(0,0,0)')
+          //-     rect(x='200', y='0',width='200', height='50', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')
+          //-     rect(x='200', y='50',width='200', height='50', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')
+          //-     rect(x='200', y='100',width='200', height='40', style='fill:rgb(0,0,255);stroke-width:1;stroke:rgb(0,0,0)')

@@ -134,8 +134,9 @@ module.exports = function(passport, ballonManager, lightManager){
 	router.get('/light/*', isAuthenticatedOrLocal, function(req, res){
 		var preset = req.path.split("/")[2];
 		lightManager.setPreset(preset, function(state){
-			res.render('light', lightManager.presets);
+			
 		});
+		res.send('{ "state": "request receved"}');
 		
 		/*lightManager.setPreset(req.path, function(state){
 			res.send('{ "state": '+state+'}');

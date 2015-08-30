@@ -5,6 +5,6 @@ module.exports = mongoose.model('Light', {
 	id :String,
 	state: String,
 	isDimmable: Boolean,
-	level: Number
+	level: String
 
 });
