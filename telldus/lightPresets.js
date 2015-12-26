@@ -27,16 +27,16 @@ module.exports={
         "name": "TV",
         "preset": [{
             "device": "LUSTRE_ENTRE",
-            "level": "50"
+            "level": "30"
         }, {
             "device": "LUSTRE_TABLE",
-            "level": "60"
+            "level": "30"
         }, {
             "device": "LUSTRE_SALON",
-            "level": "60"
+            "level": "30"
         }, {
             "device": "LAMPE_RENARD",
-            "level": "on"
+            "level": "off"
         }, {
             "device": "LAMPE_MUR_PANTERE",
             "level": "off"
@@ -45,7 +45,7 @@ module.exports={
             "level": "on"
         }, {
             "device": "LAMPE_PANDULE",
-            "level": "off"
+            "level": "on"
         }]
     },{
         "name": "off",
