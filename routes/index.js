@@ -70,45 +70,40 @@ module.exports = function(passport, ballonManager, lightManager){
 	    ballonManager.setState("", function(ballon) {
 	        res.render('ballon', {
 	            user: req.user,
-	            ballon: ballon
+	            ballon: ballon,
+	            cache: true
 	        });
 
 	    });
 	});
 
 	/*set Ballon ON ECO page*/
-	router.get('/on-eco', isAuthenticatedOrLocal, function(req, res){
+	router.get('/ballon/on-eco', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.ON_ECO, function(ballon) {
-	        res.render('ballon', {
-	            user: req.user,
-	            ballon: ballon
-	        });
-
+		 	response={};
+		 	response.state=ballon.mode;
+	        res.send(response);
 	    });
 
 		//res.render('ballon', { user: req.user, ballon: ballonManager.setState(ballonManager.ON_ECO)});
 	});
 
 	/*set Ballon ON ECO page*/
-	router.get('/force-on', isAuthenticatedOrLocal, function(req, res){
+	router.get('/ballon/force-on', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.FORCE_ON, function(ballon) {
-	        res.render('ballon', {
-	            user: req.user,
-	            ballon: ballon
-	        });
-
+	        response={};
+		 	response.state=ballon.mode;
+	        res.send(response);
 	    });
 		//res.render('ballon', { user: req.user, ballon: ballonManager.setState(ballonManager.FORCE_ON)});
 	});
 
 	/*set Ballon OFF page*/
-	router.get('/off', isAuthenticatedOrLocal, function(req, res){
+	router.get('/ballon/off', isAuthenticatedOrLocal, function(req, res){
 		 ballonManager.setState(ballonManager.OFF, function(ballon) {
-	        res.render('ballon', {
-	            user: req.user,
-	            ballon: ballon
-	        });
-
+	        response={};
+		 	response.state=ballon.mode;
+	        res.send(response);
 	    });
 		//res.render('ballon', { user: req.user, ballon: ballonManager.setState(ballonManager.OFF)});
 	});
@@ -116,14 +111,16 @@ module.exports = function(passport, ballonManager, lightManager){
 	/*device state API*/
 	router.get('/devicestate', isAuthenticatedOrLocal, function(req, res){
 		ballonManager.getBallonRealState( function(state){
-			res.send('{ "state": '+state+'}');
+			res.send('{"state": '+state+'}');
 		});
 		
 	});
 
 	router.get('/light', isAuthenticatedOrLocal, function(req, res){
 		console.log('lightManager.presets :: '+lightManager.presets.presets);
-		res.render('light', lightManager.presets);
+		var options=lightManager.presets;
+		options.cache=true;
+		res.render('light', options);
 		/*lightManager.setPreset(req.path, function(state){
 			res.send('{ "state": '+state+'}');
 		});*/
@@ -136,7 +133,7 @@ module.exports = function(passport, ballonManager, lightManager){
 		lightManager.setPreset(preset, function(state){
 			
 		});
-		res.send('{ "state": "request receved"}');
+		res.send('{"state": "request receved"}');
 		
 		/*lightManager.setPreset(req.path, function(state){
 			res.send('{ "state": '+state+'}');

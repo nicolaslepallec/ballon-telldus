@@ -16,12 +16,34 @@ a {
     margin-bottom: 10%;
     margin-top: 5%;
   font-family: helvetica;
-  color: #76b887;
+  color: #439931;
   font-size: 20px;
   padding: 40px 20px 40px 20px;
   border: solid #439931 2px;
   text-decoration: none;
 }
+.on {
+       background-color:#439931;
+       color: #FFFFFF;
+}
+
+.off {
+      
+}
+
+#state {
+    text-align: center;
+    margin-top: 5vw;
+}
+#container{
+    position: absolute;
+    bottom: 0px;
+}
+#circle{
+    width: 10px;
+    height: 10px;
+}
+
 .title{
     text-transform: uppercase;
     width: 80%;
@@ -39,7 +61,7 @@ a {
     top: 0px;
     left: 0px;
     visibility: hidden;
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background:url(/stylesheets/images/loading.gif) no-repeat center center;

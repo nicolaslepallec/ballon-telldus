@@ -22,8 +22,8 @@ function setState(mode, callback) {
         var stateCSSOnEco = 'off';
         var stateCSSForceOn = 'off';
         var stateCSSOff = 'off';
-        var StateToSwitchBallon = OFF;
-        switch (ballon.mode) {
+        var StateToSwitchBallon = false;
+        switch (mode) {
             case ON_ECO:
                 console.log("->ON_ECO");
                 stateCSSOnEco = 'on';
@@ -45,29 +45,34 @@ function setState(mode, callback) {
                 StateToSwitchBallon = OFF;
                 break;
         }
-        switchBallon(StateToSwitchBallon, function(data) {
-            Telldus.getDeviceLastState(config.BALLON_TELLDUS_ID, function(ballonState) {
-                console.log("Device current state is :: " + ballonState);
-                ballon.state = ballonState;
-                callback(ballon);
-                /*var circleColor = "";
-                switch (ballon.state) {
-                    case Telldus.STATE_OFF:
-                        circleColor = "red";
-                        break;
-                    case Telldus.STATE_ON:
-                        circleColor = "green";
-                        break;
-                }
-                var html = String(fs.readFileSync("ballon.html"));
-                html = html.replace("{classOnEco}", stateCSSOnEco);
-                html = html.replace("{classForceOn}", stateCSSForceOn);
-                html = html.replace("{classOff}", stateCSSOff);
-                html = html.replace("{circleColor}", circleColor);
-                callback(html);*/
+        if(StateToSwitchBallon){
+            switchBallon(StateToSwitchBallon, function(data) {
+                Telldus.getDeviceLastState(config.BALLON_TELLDUS_ID, function(ballonState) {
+                    console.log("Device current state is :: " + ballonState);
+                    ballon.state = ballonState;
+                    callback(ballon);
+                    /*var circleColor = "";
+                    switch (ballon.state) {
+                        case Telldus.STATE_OFF:
+                            circleColor = "red";
+                            break;
+                        case Telldus.STATE_ON:
+                            circleColor = "green";
+                            break;
+                    }
+                    var html = String(fs.readFileSync("ballon.html"));
+                    html = html.replace("{classOnEco}", stateCSSOnEco);
+                    html = html.replace("{classForceOn}", stateCSSForceOn);
+                    html = html.replace("{classOff}", stateCSSOff);
+                    html = html.replace("{circleColor}", circleColor);
+                    callback(html);*/
 
+                });
             });
-        });
+        }else{
+            callback(ballon);
+        }
+        
 
     });
 

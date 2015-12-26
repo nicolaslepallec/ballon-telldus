@@ -71,5 +71,29 @@ module.exports={
             "device": "LAMPE_PANDULE",
             "level": "off"
         }]
+    },{
+        "name": "all-on",
+        "preset": [{
+            "device": "LUSTRE_ENTRE",
+            "level": "100"
+        }, {
+            "device": "LUSTRE_TABLE",
+            "level": "100"
+        }, {
+            "device": "LUSTRE_SALON",
+            "level": "100"
+        }, {
+            "device": "LAMPE_RENARD",
+            "level": "on"
+        }, {
+            "device": "LAMPE_MUR_PANTERE",
+            "level": "on"
+        }, {
+            "device": "LAMPE_TELE",
+            "level": "on"
+        }, {
+            "device": "LAMPE_PANDULE",
+            "level": "on"
+        }]
     }]
 }

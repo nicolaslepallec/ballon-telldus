@@ -1,32 +1,13 @@
-extends layout
+extends telldusPage
 
-block header
-  link(rel='stylesheet', href='/stylesheets/style.css')
-  script.
-    (function(a,b,c){if(c in b&&b[c]){var d,e=a.location,f=/^(a|html)$/i;a.addEventListener("click",function(a){d=a.target;while(!f.test(d.nodeName))d=d.parentNode;"href"in d&&(d.href.indexOf("http")||~d.href.indexOf(e.host))&&(a.preventDefault(),e.href=d.href)},!1)}})(document,window.navigator,"standalone")
-    function setPreset(preset){
-      xmlhttp=new XMLHttpRequest();
-      xmlhttp.onreadystatechange=function()
-        {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200)
-          {
-          //data received
-          document.getElementById("overlay").style.visibility = "hidden";
-          }
-        }
-      xmlhttp.open("GET","/light/"+preset,true);
-      xmlhttp.send();
-      document.getElementById("overlay").style.visibility = "visible";
-    }
-block content
-  #overlay
+block contentExtension
   div 
     .title
       ="Select a theme preset"
     //- - var rgbstart=#db8b00
     //- - var rgbend=#fcf7bd
     each val in presets
-      a(href="#" + val.name onclick="setPreset('" + val.name + "')")
+      a(href="#" + val.name onclick="setState('/light/" + val.name + "', true)")
         .preset
             =val.name
           //- div

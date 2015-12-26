@@ -1,7 +1,6 @@
-extends layout
+extends telldusPage
 
-block header
-    link(rel='stylesheet', type='text/css', href='stylesheets/mystyle.css')
+block headerExtension
     script.
       function updateDeviceState(){
       var APIPath = "/devicestate";
@@ -35,9 +34,24 @@ block header
       function start(){
       updateDeviceState();
       }
+      setTimeout(updateDeviceState , 2000);
 
-block body
-  body(onload='start()')
+      function whenStateChage(stateObj){
+        var state=JSON.parse(stateObj).state;
+        var elements = document.getElementsByClassName("preset");
+        for(var i in elements){
+        console.log(elements[i].id);
+          if(elements[i].id==state){
+            elements[i].className = "preset on";
+          }else{
+            elements[i].className = "preset off";
+          }
+        }
+
+      }
+
+
+block contentExtension
     #container
       div
         img(src='http://s2.lmcdn.fr/multimedia/ce4247107/10baf5124ee78/produits/chauffe-eau-electrique-vertical-sur-socle-welcome-300-l.jpg', style='width:100vw;')
@@ -46,6 +60,6 @@ block body
         svg#circle(xmlns='http://www.w3.org/2000/svg')
           circle#svgcircle(cx='5', cy='5', r='5', fill= ballon.state==="1" ? 'on' : 'off')
       #buttons(align='')
-       a(href='/on-eco#buttons', class= ballon.mode==="on-eco" ? 'on' : 'off') ON ECO
-       a(href='/force-on#buttons', class= ballon.mode==="force-on" ? 'on' : 'off') FORCE ON
-       a(href='/off#buttons', class= ballon.mode==="off" ? 'on' : 'off') OFF
+       .preset(onclick="setState('/ballon/on-eco', whenStateChage)", id="on-eco", class= ballon.mode==="on-eco" ? 'on' : 'off') ON ECO
+       .preset(onclick="setState('/ballon/force-on', whenStateChage)",  id="force-on", class= ballon.mode==="force-on" ? 'on' : 'off') FORCE ON
+       .preset(onclick="setState('/ballon/off', whenStateChage)", id="off", class= ballon.mode==="off" ? 'on' : 'off') OFF
